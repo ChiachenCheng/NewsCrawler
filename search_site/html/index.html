@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="utf-8"/>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</header>
+<script type="text/javascript" color="0,0,100" opacity='0.7' zIndex="-2" count="99" src="javascripts/canvas-nest.js"></script>
+<body background="images/back.jpeg" >
+    <h1>一个严肃的新闻网页</h1>
+    <div align="center">
+        <p align="center">请先登录</p>
+        <form>
+            <br> <input class="div1" type="text" name="username" placeholder="请输入您的用户名">
+            <br> <input class="div1" type="password" name="passwd" placeholder="请输入您的密码">
+            <br> <input class="form-submit" type="button" name="query" value="登录">
+        </form>
+        <p align="center" id="hint"></p>
+        <form action="/register_page" method="POST">
+            <br> <input class="form-submit" type="submit" name="reg_pag" value="还没有账号？点此注册">
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("input[name='query']").click(function() {
+                if($("input[name='username']").val() != "" || $("input[name='passwd']").val() != ""){
+                    $.post('/log_in?usr=' + $("input[name='username']").val() + '&pw=' + $("input[name='passwd']").val(), function(data) {
+                        if(data == "TRUE"){
+                            $("#hint").empty();
+                            location.replace('/search_page?user='+ $("input[name='username']").val());
+                        } else {
+                            $("#hint").empty();
+                            $("#hint").append(data);
+                        }
+                    });
+                }
+                else{
+                    $("#hint").empty();
+                    $("#hint").append("请检查您的用户名和密码！");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

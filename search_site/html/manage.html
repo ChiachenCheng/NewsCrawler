@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="utf-8"/>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</header>
+<script type="text/javascript" color="0,0,100" opacity='0.7' zIndex="-2" count="99" src="javascripts/canvas-nest.js"></script>
+<body background="images/back.jpeg" >
+    <h1>管理用户</h1>
+    <div align="center">
+        <form>
+            <br> <input class="div1" type="text" name="user_forbid" placeholder="请输入您想启用或禁用的用户名">
+            <br> <input class="div1" type="text" name="keywords" placeholder="请输入您想在关键词中搜索的内容">
+            <br> <input class="div1" type="text" name="content" placeholder="请输入您想在正文搜索的内容">
+            <br> <input class="div1" type="text" name="all" placeholder="请输入您想在所有项搜索的内容（此项不为空时，前面三个框中的内容不再查询）">
+            <br> <input class="form-submit" type="button" name="query" value="查询">
+        </form>
+        <form action="/time_analysis" method="GET">
+            <br> <input class="div1" type="text" name="word" placeholder="请输入您想进行时间热度分析的关键词">
+            <br> <input class="form-submit" type="submit" name="timaly" value="查询">
+        </form>
+    </div>
+    <div class="cardLayout" style="margin: 10px 0px">
+        <table class="hovertable" width="100%" id="record2"></table>
+    </div>
+    <p hidden id="user"></p>
+    <script>
+        $(document).ready(function() {
+            $("input[name='query']").click(function() {
+                if($("input[name='title']").val() != "" || $("input[name='keywords']").val() != "" ||
+                    $("input[name='content']").val() != "" || $("input[name='all']").val() != ""){
+                        $.get('/process_get?title=' + $("input[name='title']").val() + '&keywords=' + $("input[name='keywords']").val() 
+                        + '&content=' + $("input[name='content']").val() + '&all=' + $("input[name='all']").val()
+                        + '&user=' + $("p#user").text(), function(data) {
+                            $("#record2").empty();
+                            $("#record2").append('<tr class="cardLayout">' +
+                                '<td>title</td><td>content</td><td>publish_date</td><td>url</td><td>source_name</td>' +
+                                '<td>keywords</td><td>author</td><td>source</td><td>desc</td><td>remark</td></tr>');
+                            for (let list of data) {
+                                let table = '<tr class="cardLayout"><td>';
+                                Object.values(list).forEach(element => {
+                                    table += (element + '</td><td>');
+                                });
+                            $("#record2").append(table + '</td></tr>');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
